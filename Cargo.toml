@@ -1,0 +1,21 @@
+[package]
+name = "ec_cost_slack_bot"
+version = "0.1.0"
+authors = ["hiromu.nakamura <abctail30@gmail.com>"]
+edition = "2021"
+license = "Apache-2.0"
+description = "This crate reports Elastic Cloud cost."
+documentation = "https://github.com/po3rin/ec_cost_slack_bot/blob/master/README.md"
+repository = "https://github.com/po3rin/ec_cost_slack_bot"
+homepage = "https://github.com/po3rin/ec_cost_slack_bot"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+surf = "2.3.2"
+clap = { version = "3.2.17", features = ["env"]}
+serde = { version = "1.0.144", features = ["derive"] }
+async-std = { version = "1.12.0", features = ["attributes"] }
+serde_derive = "1.0.144"
+serde_json = "1.0.85"
