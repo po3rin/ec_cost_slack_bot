@@ -78,5 +78,7 @@ jobs:
           toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
+        env:
+          CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
         with:
           command: publish --token $CARGO_TOKEN
