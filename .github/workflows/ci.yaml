@@ -81,4 +81,4 @@ jobs:
         env:
           CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
         with:
-          command: publish --token $CARGO_TOKEN
+          command: cargo publish --token $CARGO_TOKEN
