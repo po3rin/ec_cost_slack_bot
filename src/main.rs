@@ -80,23 +80,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
                 .env("SLACK_WEBHOOK_URL")
                 .takes_value(true)
                 .help("Slack webhook url"),
+        )
+        .arg(
+            Arg::new("threshold")
+                .short('t')
+                .long("hourly-rate-threshold")
+                .env("HOURLY_LATE_THRESHOLD")
+                .takes_value(true)
+                .help("Slack webhook url"),
         );
 
     let matches = app.get_matches();
     let ec_api_key = matches.value_of("key").unwrap();
     let organization_id = matches.value_of("organization").unwrap();
     let slack_url = matches.value_of("slack").unwrap();
+    let hourly_rate_threshold = matches.value_of("threshold").unwrap();
 
     let res = es_cost(ec_api_key, organization_id).await.unwrap();
 
-    let mut target_string = String::new();
-    writeln!(target_string, "total: {}", res.costs.total).unwrap();
-    writeln!(target_string, "hourly_rate: {}", res.hourly_rate).unwrap();
-    for dimension in &res.costs.dimensions {
-        writeln!(target_string, "{}: {}", dimension.typ, dimension.cost).unwrap();
-    }
+    let hourly_rate_threshold_f = hourly_rate_threshold.parse::<f64>().unwrap();
 
-    post_slack(slack_url, &target_string).await.unwrap();
+    if  hourly_rate_threshold_f < res.costs.total {
+        let mut target_string = String::new();
+        writeln!(target_string, ":warning: 料金が予測より超過している恐れがあります :warning:").unwrap();
+        writeln!(target_string, "---- Elastic Cloud コストレポート ----").unwrap();
+        writeln!(target_string, "今月のトータル: {} $", res.costs.total).unwrap();
+        writeln!(target_string, "コスト/時間: {} $", res.hourly_rate).unwrap();
+        writeln!(target_string, "").unwrap();
+        writeln!(target_string, "## コスト種別").unwrap();
+        for dimension in &res.costs.dimensions {
+            writeln!(target_string, "{}: {} $", dimension.typ, dimension.cost).unwrap();
+        }
+
+        post_slack(slack_url, &target_string).await.unwrap();
+    } 
 
     Ok(())
 }
