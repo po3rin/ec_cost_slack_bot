@@ -11,14 +11,14 @@ extern crate serde_json;
 #[derive(Serialize, Deserialize)]
 struct Res {
     costs: Costs,
-    hourly_rate: f64
+    hourly_rate: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Dimension {
-    #[serde(rename = "type")] 
+    #[serde(rename = "type")]
     typ: String,
-    cost: f64
+    cost: f64,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -27,27 +27,28 @@ struct Costs {
     dimensions: Vec<Dimension>,
 }
 
-
 #[derive(Serialize, Deserialize)]
 struct Msg {
-    text: String
+    text: String,
 }
 
-async fn es_cost(ec_api_key: &str, organization_id: &str) -> Result<Res, surf::Error>{
+async fn es_cost(ec_api_key: &str, organization_id: &str) -> Result<Res, surf::Error> {
     let header_val = "ApiKey ".to_string() + ec_api_key;
 
-    let Res {costs, hourly_rate} = surf::get("https://api.elastic-cloud.com/api/v1/billing/costs/".to_string() + organization_id)
-        .header("Authorization", header_val)
-        .recv_json().await?;
-    Ok(Res {costs, hourly_rate})
+    let Res { costs, hourly_rate } = surf::get(
+        "https://api.elastic-cloud.com/api/v1/billing/costs/".to_string() + organization_id,
+    )
+    .header("Authorization", header_val)
+    .recv_json()
+    .await?;
+    Ok(Res { costs, hourly_rate })
 }
 
-async fn post_slack(slack_webhook_url: &str, msg: &str) -> Result<(), surf::Error>{
+async fn post_slack(slack_webhook_url: &str, msg: &str) -> Result<(), surf::Error> {
     let data = &Msg {
-        text: msg.to_string()
+        text: msg.to_string(),
     };
-    let _ = surf::post(slack_webhook_url).body_json(data)?
-        .await?;
+    let _ = surf::post(slack_webhook_url).body_json(data)?.await?;
     Ok(())
 }
 
@@ -71,7 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
                 .long("organization-id")
                 .env("EC_ORGANAIZATION_ID")
                 .takes_value(true)
-                .help("Elastic Cloud organaization id")
+                .help("Elastic Cloud organaization id"),
         )
         .arg(
             Arg::new("slack")
@@ -100,9 +101,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
 
     let hourly_rate_threshold_f = hourly_rate_threshold.parse::<f64>().unwrap();
 
-    if  hourly_rate_threshold_f < res.costs.total {
+    if hourly_rate_threshold_f < res.costs.total {
         let mut target_string = String::new();
-        writeln!(target_string, ":warning: 料金が予測より超過している恐れがあります :warning:").unwrap();
+        writeln!(
+            target_string,
+            ":warning: 料金が予測より超過している恐れがあります :warning:"
+        )
+        .unwrap();
         writeln!(target_string, "---- Elastic Cloud コストレポート ----").unwrap();
         writeln!(target_string, "今月のトータル: {} $", res.costs.total).unwrap();
         writeln!(target_string, "コスト/時間: {} $", res.hourly_rate).unwrap();
@@ -113,7 +118,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         }
 
         post_slack(slack_url, &target_string).await.unwrap();
-    } 
+    }
 
     Ok(())
 }
