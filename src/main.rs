@@ -2,6 +2,7 @@ extern crate clap;
 extern crate surf;
 use clap::{App, Arg};
 use std::fmt::Write;
+use thousands::Separable;
 
 #[macro_use]
 extern crate serde_derive;
@@ -109,12 +110,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         )
         .unwrap();
         writeln!(target_string, "---- Elastic Cloud コストレポート ----").unwrap();
-        writeln!(target_string, "今月のトータル: {} $", res.costs.total).unwrap();
-        writeln!(target_string, "コスト/時間: {} $", res.hourly_rate).unwrap();
+        writeln!(
+            target_string,
+            "今月のトータル: ${}",
+            res.costs.total.separate_with_commas()
+        )
+        .unwrap();
+        writeln!(
+            target_string,
+            "コスト/時間: ${}",
+            res.hourly_rate.separate_with_commas()
+        )
+        .unwrap();
         writeln!(target_string).unwrap();
         writeln!(target_string, "## コスト種別").unwrap();
         for dimension in &res.costs.dimensions {
-            writeln!(target_string, "{}: {} $", dimension.typ, dimension.cost).unwrap();
+            writeln!(
+                target_string,
+                "{}: ${}",
+                dimension.typ,
+                dimension.cost.separate_with_commas()
+            )
+            .unwrap();
         }
 
         post_slack(slack_url, &target_string).await.unwrap();
