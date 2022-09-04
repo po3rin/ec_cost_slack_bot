@@ -1,6 +1,6 @@
 # ec_cost_slack_bot
 
-[![ci](https://github.com/po3rin/ec_cost_slack_bot/actions/workflows/ci.yaml/badge.svg)](https://github.com/po3rin/ec_cost_slack_bot/actions/workflows/ci.yaml) [![Crate](https://img.shields.io/crates/v/ec_cost_slack_bot.svg)](https://crates.io/crates/ec_cost_slack_bot) [![API](https://docs.rs/ec_cost_slack_bot/badge.svg)](https://docs.rs/ec_cost_slack_bot)
+[![ci](https://github.com/po3rin/ec_cost_slack_bot/actions/workflows/ci.yaml/badge.svg)](https://github.com/po3rin/ec_cost_slack_bot/actions/workflows/ci.yaml) [![Crate](https://img.shields.io/crates/v/ec_cost_slack_bot.svg)](https://crates.io/crates/ec_cost_slack_bot)
 
 this cli lets you to warn Elastic Cloud cost to Slack.
 
