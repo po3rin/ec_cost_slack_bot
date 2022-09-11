@@ -11,6 +11,31 @@ $ cargo install ec_cost_slack_bot
 $ ec_cost_slack_bot 
 ```
 
+```
+USAGE:
+    ec_cost_slack_bot [OPTIONS]
+
+OPTIONS:
+    -h, --help
+            Print help information
+
+    -k, --ec-api-key <key>
+            Elastic Cloud api key [env: EC_API_KEY=]
+
+    -o, --organization-id <organization>
+            Elastic Cloud organaization id [env: EC_ORGANAIZATION_ID=]
+
+    -s, --slack-webhook-url <slack>
+            Slack webhook url [env: SLACK_WEBHOOK_URL=]
+
+    -t, --hourly-rate-threshold <threshold>
+            Slack webhook url [env: HOURLY_LATE_THRESHOLD=]
+
+    -V, --version
+            Print version information
+```
+
 output example
 
 <img src="./sample.png">
+
