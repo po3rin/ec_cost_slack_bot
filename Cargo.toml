@@ -1,6 +1,6 @@
 [package]
 name = "ec_cost_slack_bot"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["hiromu.nakamura <abctail30@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0"
