@@ -71,7 +71,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
             Arg::new("organization")
                 .short('o')
                 .long("organization-id")
-                .env("EC_ORGANAIZATION_ID")
+                .env("EC_ORGANIZATION_ID")
                 .takes_value(true)
                 .help("Elastic Cloud organaization id"),
         )
@@ -87,7 +87,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
             Arg::new("threshold")
                 .short('t')
                 .long("hourly-rate-threshold")
-                .env("HOURLY_LATE_THRESHOLD")
+                .env("HOURLY_RATE_THRESHOLD")
                 .takes_value(true)
                 .help("Slack webhook url"),
         );
